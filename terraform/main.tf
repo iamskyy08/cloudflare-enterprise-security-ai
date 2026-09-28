@@ -2,10 +2,6 @@ locals {
   worker_fqdn = "${var.worker_hostname}.${var.domain}"
 }
 
-# ---------------------------------------------------------------------------
-# DNS / Edge entry point
-# ---------------------------------------------------------------------------
-
 resource "cloudflare_dns_record" "worker" {
   zone_id = var.cloudflare_zone_id
   name    = var.worker_hostname
@@ -26,10 +22,6 @@ resource "cloudflare_dns_record" "origin" {
   comment = "Protected application origin."
 }
 
-# ---------------------------------------------------------------------------
-# WAF
-# ---------------------------------------------------------------------------
-
 resource "cloudflare_ruleset" "waf_custom" {
   zone_id = var.cloudflare_zone_id
   name    = "enterprise-edge-security"
@@ -40,25 +32,27 @@ resource "cloudflare_ruleset" "waf_custom" {
     action      = "block"
     description = "Block obvious scanner and exploit URI patterns"
     enabled     = true
-    expression  = "(http.request.uri.path contains "/.env") or (http.request.uri.path contains "/wp-config.php") or (http.request.uri.path contains "/etc/passwd")"
+    expression  = <<-EOT
+      (http.request.uri.path contains "/.env") or
+      (http.request.uri.path contains "/wp-config.php") or
+      (http.request.uri.path contains "/etc/passwd")
+    EOT
   }
 
   rules {
     action      = "managed_challenge"
     description = "Challenge suspicious high-risk paths"
     enabled     = true
-    expression  = "(http.request.method eq "POST" and http.request.uri.path contains "/admin")"
+    expression  = <<-EOT
+      (http.request.method eq "POST" and http.request.uri.path contains "/admin")
+    EOT
   }
 }
 
-# ---------------------------------------------------------------------------
-# Zero Trust Access
-# ---------------------------------------------------------------------------
-
 resource "cloudflare_zero_trust_access_application" "private_app" {
-  account_id = var.cloudflare_account_id
-  name       = "Enterprise Private Application"
-  type       = "self_hosted"
+  account_id      = var.cloudflare_account_id
+  name            = "Enterprise Private Application"
+  type            = "self_hosted"
   session_duration = "8h"
 
   destinations {
@@ -88,13 +82,7 @@ resource "cloudflare_zero_trust_access_policy" "private_app_allow" {
   }
 }
 
-# ---------------------------------------------------------------------------
-# Five-branch Tunnel inventory
-# ---------------------------------------------------------------------------
-# Tunnel resources are represented as a repeatable pattern. The actual tunnel
-# connector runs cloudflared at each branch and should use credentials stored
-# outside Git.
-
+# Five enterprise branches.
 resource "cloudflare_zero_trust_tunnel_cloudflared" "branch" {
   for_each = toset(var.branch_locations)
 
