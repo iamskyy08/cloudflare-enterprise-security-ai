@@ -1,0 +1,12 @@
+name = "cloudflare-enterprise-security-ai-worker"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+[ai]
+binding = "AI"
+
+[vars]
+ENVIRONMENT = "portfolio"
+
+# Add your production route after the zone is configured:
+# routes = [{ pattern = "api.example.com/*", zone_name = "example.com" }]

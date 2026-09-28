@@ -1,0 +1,9 @@
+cloudflare_api_token   = "REPLACE_ME"
+cloudflare_account_id  = "REPLACE_ME"
+cloudflare_zone_id     = "REPLACE_ME"
+domain                 = "example.com"
+
+worker_hostname                 = "api"
+protected_origin                = "origin.example.internal"
+zero_trust_application_hostname = "internal.example.com"
+allowed_email_domain            = "example.com"

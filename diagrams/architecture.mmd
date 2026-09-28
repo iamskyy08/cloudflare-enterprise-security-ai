@@ -1,0 +1,32 @@
+flowchart TB
+  Users[Remote Users]
+  B1[Branch 01]
+  B2[Branch 02]
+  B3[Branch 03]
+  B4[Branch 04]
+  B5[Branch 05]
+
+  Edge[Cloudflare Edge]
+  WAF[WAF]
+  CDN[CDN]
+  Worker[Workers]
+  AI[Workers AI]
+  Access[Zero Trust Access]
+  Tunnel[Cloudflare Tunnel]
+  Origin[Private Origin]
+
+  Users --> Edge
+  Edge --> WAF
+  WAF --> CDN
+  CDN --> Worker
+  Worker --> AI
+  Worker --> Origin
+
+  Users --> Access
+  B1 --> Tunnel
+  B2 --> Tunnel
+  B3 --> Tunnel
+  B4 --> Tunnel
+  B5 --> Tunnel
+  Tunnel --> Access
+  Access --> Origin
