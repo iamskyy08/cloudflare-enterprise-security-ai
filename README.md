@@ -80,7 +80,7 @@ Terraform is responsible for Cloudflare infrastructure configuration. The Worker
 6. Configure the Worker name/account in `wrangler.toml`.
 7. Run `npx wrangler deploy`.
 
-> This repository is an interview/portfolio lab. Review provider resource availability and Cloudflare account entitlements before applying it to production.
+> This repository is a portfolio lab. Review provider resource availability and Cloudflare account entitlements before applying it to production.
 
 ## Worker endpoints
 
@@ -95,19 +95,3 @@ curl -X POST https://<worker-domain>/security/analyze \
   -H 'content-type: application/json' \
   -d '{"event":"Repeated failed authentication from an unfamiliar device","severity":"medium"}'
 ```
-
-## Interview talking points
-
-This project demonstrates the lifecycle:
-
-**Discover → Assess → Requirements → Design → IaC → Configure → Test → Pilot → Deploy → Validate → Document → Handover**
-
-It can be used to discuss:
-- Zero Trust versus network-level VPN access
-- Branch-to-cloud connectivity
-- DNS, TLS and HTTP request flow
-- WAF and edge security
-- Serverless edge compute
-- AI inference at the edge
-- Terraform state and CI/CD
-- Security guardrails and least privilege
